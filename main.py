@@ -28,7 +28,8 @@ args, unparsed = config.get_args()
 cwd = os.getcwd()
 print(args)
 
-save_loc = os.path.join(args.checkpoint_dir , "saved_models_final" , args.dataset , args.exp_name)
+#save_loc = os.path.join(args.checkpoint_dir , "saved_models_final" , args.dataset , args.exp_name)
+save_loc = os.path.join(args.checkpoint_dir , "saved_models_final" , 'Rheology2023' , args.exp_name) ##if want to change directory name
 if not os.path.exists(save_loc):
     os.makedirs(save_loc)
 opts_file = os.path.join(save_loc , "opts.txt")
@@ -37,9 +38,12 @@ with open(opts_file , "w") as fh:
 
 
 ##### TensorBoard & Misc Setup #####
-writer_loc = os.path.join(args.checkpoint_dir , 'tensorboard_logs_%s_final/%s' % (args.dataset , args.exp_name))
+#witer_loc = os.path.join(args.checkpoint_dir , 'tensorboard_logs_%s_final/%s' % (args.dataset , args.exp_name))
+writer_loc = os.path.join(args.checkpoint_dir , 'tensorboard_logs_%s_final/%s' % ('Rheology2023' , args.exp_name))
 writer = SummaryWriter(writer_loc)
 
+os.environ["CUDA_VISIBLE_DEVICES"]='1'
+#tf_device='/gpu:0'
 device = torch.device('cuda' if args.cuda else 'cpu')
 torch.backends.cudnn.enabled = True
 torch.backends.cudnn.benchmark = True
@@ -185,7 +189,12 @@ def main(args):
                 print("Not loading" , k)
 
         model.load_state_dict(modelStateDict)
-
+    ##Before train
+    import gc
+    torch.cuda.empty_cache()
+    gc.collect()
+    
+    ##**train
     best_psnr = 0
     for epoch in range(args.start_epoch, args.max_epoch):
         train(args, epoch)

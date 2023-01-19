@@ -16,7 +16,7 @@ import myutils
 from torch.utils.data import DataLoader
 
 ##### Parse CmdLine Arguments #####
-os.environ["CUDA_VISIBLE_DEVICES"]='7'
+os.environ["CUDA_VISIBLE_DEVICES"]='1'
 args, unparsed = config.get_args()
 cwd = os.getcwd()
 
