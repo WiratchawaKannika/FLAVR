@@ -80,35 +80,35 @@ def Filter_dataset(trainlist0, subset, root2save): ## subset == train or test --
          'Path4': pth_training4,
          'Path5': pth_training5
         })
-#     print("========== Prepare to create text files ========== ")
-#     time.sleep(0.5)
-#     df_['Path_txt'] = ''
-#     for i in range(len(df_)):
-#         name1 = df_['Path1'][i]
-#         name2 = df_['Path2'][i]
-#         name3 = df_['Path3'][i]
-#         name4 = df_['Path4'][i]
-#         name5 = df_['Path5'][i]
-#         df_.loc[df_.index[i], 'Path_txt'] = str(name1)+' '+str(name2)+' '+str(name3)+' '+str(name4)+' '+str(name5)    
+    print("========== Prepare to create text files ========== ")
+    time.sleep(0.5)
+    df_['Path_txt'] = ''
+    for i in range(len(df_)):
+        name1 = df_['Path1'][i]
+        name2 = df_['Path2'][i]
+        name3 = df_['Path3'][i]
+        name4 = df_['Path4'][i]
+        name5 = df_['Path5'][i]
+        df_.loc[df_.index[i], 'Path_txt'] = str(name1)+' '+str(name2)+' '+str(name3)+' '+str(name4)+' '+str(name5)    
     print(f'Filtered {subset} set with shape : {df_.shape}')
-    ## Save to text file
-#     time.sleep(0.5)
-#     print("On process to Save text file")
-#     list_path = df_['Path_txt'].tolist()
-    #path2savetxt = f'{root2save}rheology2023-{subset}.txt'
-    path2savecsv = f'{root2save}rheology2023-{subset}.csv'
-#     with open(path2savetxt, 'w') as f:
-#          for line in list_path:
-#                 f.write(f"{line}\n")
-#     print(f'Done!! : Write text file name -> [ {path2savetxt} ] ')
-    df_.to_csv(path2savecsv)
-    print(f'Done!! : Write CSV. file name -> [ {path2savecsv} ] ')
-    #print('Filter {} set, That took {} seconds'.format(subset, time.time() - starttime))
+    # Save to text file
+    time.sleep(0.5)
+    print("On process to Save text file")
+    list_path = df_['Path_txt'].tolist()
+    path2savetxt = f'{root2save}GLYrheology2023-{subset}.txt'
+    #path2savecsv = f'{root2save}GLYrheology2023-{subset}.csv'
+    with open(path2savetxt, 'w') as f:
+         for line in list_path:
+                f.write(f"{line}\n")
+    print(f'Done!! : Write text file name -> [ {path2savetxt} ] ')
+#     df_.to_csv(path2savecsv)
+#     print(f'Done!! : Write CSV. file name -> [ {path2savecsv} ] ')
+    print('Filter {} set, That took {} seconds'.format(subset, time.time() - starttime))
     
 
 ### Start
 trainlist0 = []
-data_fn = glob.glob(f"{data_root}/*{subset}.txt")
+data_fn = glob.glob(f"{data_root}/GLY*{subset}.txt")
 data_fn.sort()
 ## For training set
 for fn in data_fn:

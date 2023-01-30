@@ -6,17 +6,18 @@ from torchvision import transforms
 from PIL import Image
 import random
 import glob
+import pandas as pd
 
 ##function check broken images path.
-def img_verify(sub_testlist):
-    _except = []
-    for file in sub_testlist:
-        try:
-            img = Image.open(file)  # open the image file
-            img.verify()  # verify that it is, in fact an image
-        except (IOError, SyntaxError) as e:
-            _except.append(file)
-    return _except 
+# def img_verify(sub_testlist):
+#     _except = []
+#     for file in sub_testlist:
+#         try:
+#             img = Image.open(file)  # open the image file
+#             img.verify()  # verify that it is, in fact an image
+#         except (IOError, SyntaxError) as e:
+#             _except.append(file)
+#     return _except 
 
 class VimeoSepTuplet(Dataset):
     def __init__(self, data_root, is_training , input_frames="1357"):
@@ -35,35 +36,33 @@ class VimeoSepTuplet(Dataset):
         self.inputs = input_frames
 
         #train_fn = os.path.join(self.data_root, 'sep_trainlist.txt')  ## Chang path if change fold. 
-        train_fn = glob.glob(f"{data_root}/*train.txt")
-        train_fn.sort()
+#         train_fn = glob.glob(f"{data_root}/*train.txt")
+#         train_fn.sort()
+        train_fn = pd.read_csv(f"{data_root}/GlycerolRheology2023-train.csv") ## Train Only Glycerol
         #test_fn = os.path.join(self.data_root, 'sep_testlist.txt')
-        test_fn = glob.glob(f"{data_root}/*test.txt")
+        test_fn = glob.glob(f"{data_root}/rheology2023-test.txt")
         test_fn.sort()
         ## For training set
-        for fn in train_fn:
-            with open(fn, 'r') as txt:
-                 meta_data = [line.strip() for line in txt]
-            for seq in meta_data:
-                img1_path, img2_path, img3_path, img4_path, img5_path = seq.split(' ')
-                sub_trainlist = [img1_path,img2_path,img3_path,img4_path, img5_path]
-                ## Check Images Broken 
-                _except = img_verify(sub_trainlist)
-                if len(_except) == 0:
-                    self.trainlist.append(sub_trainlist)
-                #self.trainlist.append([img1_path,img2_path,img3_path,img4_path, img5_path])
+#         for fn in train_fn:
+#             with open(fn, 'r') as txt:
+#                  meta_data = [line.strip() for line in txt]
+#             for seq in meta_data:
+#                 img1_path, img2_path, img3_path, img4_path, img5_path = seq.split(' ')
+#                 self.trainlist.append([img1_path,img2_path,img3_path,img4_path, img5_path])
+        for i in range(len(train_fn)):
+            img1_path = train_fn['Path1'][i]
+            img2_path = train_fn['Path2'][i]
+            img3_path = train_fn['Path3'][i]
+            img4_path = train_fn['Path4'][i]
+            img5_path = train_fn['Path5'][i]
+            self.trainlist.append([img1_path,img2_path,img3_path,img4_path, img5_path])
        ## For Test set 
         for ft in test_fn:
             with open(ft, 'r') as txt:
                  meta_data = [line.strip() for line in txt]
             for seq in meta_data:
                 img1_path, img2_path, img3_path, img4_path, img5_path = seq.split(' ')
-                sub_testlist = [img1_path,img2_path,img3_path,img4_path, img5_path]
-                ## Check Images Broken 
-                _except = img_verify(sub_testlist)
-                if len(_except) == 0:
-                    self.testlist.append(sub_testlist)
-                #self.testlist.append([img1_path,img2_path,img3_path,img4_path, img5_path])
+                self.testlist.append([img1_path,img2_path,img3_path,img4_path, img5_path])
     
 
         if self.training:
