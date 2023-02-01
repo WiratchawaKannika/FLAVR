@@ -13,7 +13,7 @@ data_arg = add_argument_group('Dataset')
 data_arg.add_argument('--dataset', type=str, default='vimeo90k')
 data_arg.add_argument('--data_root', type=str)
 data_arg.add_argument('--GenBroken', action='store_true')
-#data_arg.add_argument('--data_frame', type=str, default='/home/kannika/codes_AI/CSV/rheology2023_random40folder_4linedemo.csv')
+data_arg.add_argument('--genNum', type=int)
 
 # Model
 model_choices = ["unet_18", "unet_34"]
