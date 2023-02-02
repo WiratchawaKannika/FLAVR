@@ -9,6 +9,7 @@ import pandas as pd
 import torch
 import numpy as np
 from tqdm import tqdm
+import glob
 from torch.utils.tensorboard import SummaryWriter
 
 from dataset.transforms import Resize
@@ -107,8 +108,8 @@ def test(args):
             genNum = args.genNum
             genNum = f'gen{genNum}'
             data_root = args.data_root
-            pathframe = pd.read_csv(data_root)
-            data_path = pathframe['FolderPathDemo'].tolist()
+            data_path = glob.glob(f"{data_root}/*-4linedemo.txt")
+            data_path.sort()
             for data in data_path:  ##** Modified by AI
                 print(f'On Process Folder  -->> [ {data} ]')
                 list_imgframe = list()
