@@ -80,16 +80,16 @@ def Filter_dataset(trainlist0, subset, root2save): ## subset == train or test --
          'Path4': pth_training4,
          'Path5': pth_training5
         })
-#     print("========== Prepare to create text files ========== ")
-#     time.sleep(0.5)
-#     df_['Path_txt'] = ''
-#     for i in range(len(df_)):
-#         name1 = df_['Path1'][i]
-#         name2 = df_['Path2'][i]
-#         name3 = df_['Path3'][i]
-#         name4 = df_['Path4'][i]
-#         name5 = df_['Path5'][i]
-#         df_.loc[df_.index[i], 'Path_txt'] = str(name1)+' '+str(name2)+' '+str(name3)+' '+str(name4)+' '+str(name5)    
+    print("========== Prepare to create text files ========== ")
+    time.sleep(0.5)
+    df_['Path_txt'] = ''
+    for i in range(len(df_)):
+        name1 = df_['Path1'][i]
+        name2 = df_['Path2'][i]
+        name3 = df_['Path3'][i]
+        name4 = df_['Path4'][i]
+        name5 = df_['Path5'][i]
+        df_.loc[df_.index[i], 'Path_txt'] = str(name1)+' '+str(name2)+' '+str(name3)+' '+str(name4)+' '+str(name5)    
     print(f'Filtered {subset} set with shape : {df_.shape}')
     ## Save to text file
 #     time.sleep(0.5)
