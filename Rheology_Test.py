@@ -106,7 +106,9 @@ def test(args):
             print('*'*120)
         else:
             genNum = args.genNum
-            genNum = f'gen{genNum}'
+            _genNum = f'gen{genNum}'
+            genNum_old = genNum-1
+            _genNumold = f'gen{genNum_old}'
             data_root = args.data_root
             data_path = glob.glob(f"{data_root}/*-4linedemo.txt")
             data_path.sort()
@@ -114,18 +116,26 @@ def test(args):
                 print(f'On Process Folder  -->> [ {data} ]')
                 list_imgframe = list()
                 test_loader = get_loader(data, 1, shuffle=False, num_workers=args.num_workers)   ##** Modified by AI
-                folder_name_ = data.replace("4linedemo", "inter")
-                folder_name_ = folder_name_.split('.')[0]
-                save_pathimg = folder_name_.replace("pred_text/Saliva2/origin", f"Frame_Inter/Saliva2/{genNum}")
+                if genNum == 1:
+                    folder_name_ = data.replace("-4linedemo", f"_{_genNum}-inter")
+                    folder_name_ = folder_name_.split('.')[0]
+                    save_pathimg = folder_name_.replace("pred_text/Saliva2/origin", f"Frame_Inter/Saliva2/{_genNum}")
+                else:
+                    folder_name_ = data.replace(f"{_genNumold}-4linedemo", f"{_genNum}-inter")
+                    folder_name_ = folder_name_.split('.')[0]
+                    save_pathimg = folder_name_.replace(_genNumold, _genNum)
+                ##**Mkdir Directory 
                 import imageio
                 os.makedirs(save_pathimg, exist_ok=True)
                 ### Create name img path
                 name_img = save_pathimg.split("/")[-1]
-                name_img_ = name_img.split("-")[0]
+                name_img_ = name_img.split("_")[:-1]
+                __name_img = '_'.join(name_img_)
                 ## Create path to save CSV.
                 save_csv = save_pathimg.split("/")[:-1]
                 save_csv_ = '/'.join(save_csv)
-                pathName_csv = save_csv_+'/'+name_img_+'_'+genNum+'.csv'
+                pathName_csv = save_csv_+'/'+__name_img+'_'+_genNum+'.csv'
+                _pathName_csv = pathName_csv.replace(_genNumold, f"Frame_Inter/Saliva2/{_genNum}")
                 
                 for i, (images, name ) in enumerate((test_loader)): ##** Modified by AI
                     images = torch.stack(images , dim=1).squeeze(0)
@@ -148,7 +158,7 @@ def test(args):
 
                     output_image = make_image(out.squeeze(0))
                     ## save frame inter
-                    out_name = os.path.join(save_pathimg, name_img_+'_inter'+str(i)+'_'+genNum+'.jpg')
+                    out_name = os.path.join(save_pathimg, __name_img+'_inter'+str(i+1)+'_'+_genNum+'.jpg') 
                     imageio.imwrite(out_name, output_image) 
                     ## Save Sequence frame to csv.
                     if i == 0:
@@ -164,9 +174,9 @@ def test(args):
                         list_imgframe.append(name[1][0])
                         list_imgframe.append(out_name)
                 df = pd.DataFrame(list_imgframe, columns =['seq_inter'])
-                df.to_csv(pathName_csv)
+                df.to_csv(_pathName_csv)
                 print('Frame Interpolation saVe at -->>', save_pathimg)
-                print(f"Save Sequence Dataframe at -->> {pathName_csv} With Shape: {df.shape}")
+                print(f"Save Sequence Dataframe at -->> {_pathName_csv} With Shape: {df.shape}")
                 print('*'*120)
 
     return
